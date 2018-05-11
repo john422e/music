@@ -3,7 +3,7 @@
 import argparse
 from pythonosc import udp_client, osc_message_builder, dispatcher, osc_server
 import threading
-import other_functions as of
+#import other_functions as of
 from time import sleep
 from random import randrange, choice
 
