@@ -39,7 +39,40 @@ def send(client, msg, mode):
         val = randrange(0, 100)
         msg2 = pi + " " + str(val)
     client.send_message(msg1, msg2)
-    print(msg1, msg2)
+    #print(msg1, msg2)
+    print("sending...")
+
+def send_reading(client, adr, mode):#self, junk):
+    # we send the Pi's IP address as the OSC address
+    # so the host computer knows which Pi sent a message
+    packet = osc_message_builder.OscMessageBuilder(address=adr)
+
+    # adds whichPi to the OSC message
+    #hostname = socket.gethostname()
+
+    # print(hostname)
+    # for dev mode only
+    if mode == 'local':
+        pi = choice(["pione", "pitwo", "pithree", "pifour", "pifive", "pisix",
+                     "piseven", "pieight"])
+        val = randrange(0, 100)
+        hostname = pi
+
+    packet.add_arg(hostname, arg_type='s')
+
+    # adds distance reading to the OSC message
+    packet.add_arg(val, arg_type='f')
+
+    # completes the OSC message
+    packet = packet.build()
+
+    # sends distance back to the host
+    client.send(packet)
+
+    print("sending:", adr, hostname, val)
+
+def parse_sensors(address, hostname, val):
+    print("pi: ", hostname, "val: ", val)
 
 def make_server(IP, port, address):
     # creates server on thread for receiving osc messages
@@ -63,12 +96,7 @@ def make_server(IP, port, address):
 
     return server
 
-def parse_sensors():
-    #dder = address
-    #print(adder)
-    print("we made it!")
-    print("pi: ", pi)
-    print("val: ", val)
+
 
 #### old functions
 

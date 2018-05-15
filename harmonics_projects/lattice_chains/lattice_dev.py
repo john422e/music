@@ -1,3 +1,6 @@
+import argparse
+from pythonosc import udp_client, osc_message_builder, dispatcher, osc_server
+import threading
 import network_functions as nf
 from time import sleep
 
@@ -5,11 +8,14 @@ from time import sleep
 ui = input("1. Run Program (networked) 2. Dev. Mode (local): ")
 
 if ui == "1":
-    IP = "192.168.07"
+    IP = "192.168.0.7"
     sending = "pis"
 elif ui == "2":
     IP = "127.0.0.1"
     sending = "local"
+
+local_IP = "127.0.0.1"
+john_MBP = "192.168.0.7"
 
 # pi hostnames
 wall_IPs = ['pione.local', 'pitwo.local', 'pithree.local', 'pifour.local',
@@ -27,10 +33,9 @@ if sending == "pis":
         client = nf.make_client(wall_IP, ping_port)
         wall_clients.append(client)
 elif sending == "local":
-    client = nf.make_client(IP, ping_port)
+    client = nf.make_client(IP, rec_port)
     wall_clients.append(client)
 
-# create listening server
 local_server = nf.make_server(IP, rec_port, "/w")
 
 wall_names = ["pione", "pitwo", "pithree", "pifour", "pifive", "pisix",
@@ -42,7 +47,7 @@ wall_vals = [0, 0, 0, 0, 0, 0, 0]
 while True:
     # ping
     for client in wall_clients:
-        nf.send(client, "/w", sending)
+        nf.send_reading(client, "/w", sending) #simulation use nf.read for real
     # exit loop option
     ui = input("'q' to quit: ")
     if ui == 'q':
