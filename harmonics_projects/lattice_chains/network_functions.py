@@ -26,21 +26,11 @@ def make_client(IP, port):
     client = udp_client.SimpleUDPClient(args.ip, args.port)
     return client
 
-def send(client, msg, mode):
+def send(client, msg1, msg2=0):
     # sends message to osc client
-    msg1 = msg
-    if mode == 'pis':
-        # this is a nul value just to make send work
-        msg2 = 0
-    # for dev mode only
-    elif mode == 'local':
-        pi = choice(["pione", "pitwo", "pithree", "pifour", "pifive", "pisix",
-                     "piseven", "pieight"])
-        val = randrange(0, 100)
-        msg2 = pi + " " + str(val)
+    # msg2 is a nul value just to make send work
     client.send_message(msg1, msg2)
-    #print(msg1, msg2)
-    print("sending...")
+    #print("sending...")
 
 def send_reading(client, adr, mode):#self, junk):
     # we send the Pi's IP address as the OSC address
@@ -69,7 +59,7 @@ def send_reading(client, adr, mode):#self, junk):
     # sends distance back to the host
     client.send(packet)
 
-    print("sending:", adr, hostname, val)
+    #print("sending:", adr, hostname, val)
 
 def parse_sensors(address, hostname, val):
     print("pi: ", hostname, "val: ", val)
